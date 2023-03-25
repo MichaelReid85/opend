@@ -19,6 +19,7 @@ function Item(props) {
     const [blur, setBlur] = useState();
     const [sellStatus, setSellStatus] = useState("");
     const [priceLabel, setPriceLabel] = useState();
+    const [shouldDisplay, setDisplay] = useState(true);
 
     const id = props.id;
 
@@ -109,6 +110,7 @@ function Item(props) {
 
     async function handleBuy() {
       console.log("Buy was triggered");
+      setLoaderHidden(false);
       const tokenActor = await Actor.createActor(tokenIdlFactory, {
         agent,
         canisterId: Principal.fromText("qhbym-qaaaa-aaaaa-aaafq-cai"),
@@ -119,13 +121,19 @@ function Item(props) {
 
       const result = await tokenActor.transfer(sellerId, itemPrice);
       if (result == "Success") {
-       const transferResult = await opend.completePurchase(props.id, sellerId, CURRENT_USER_ID);
+       const transferResult = await opend.completePurchase(
+        props.id, 
+        sellerId, 
+        CURRENT_USER_ID
+        );
         console.log("purchase: " + transferResult);
+        setLoaderHidden(true);
+        setDisplay(false); 
       }
     }
 
   return (
-    <div className="disGrid-item">
+    <div style={{ display: shouldDisplay ? "inline" : "none" }} className="disGrid-item">
       <div className="disPaper-root disCard-root makeStyles-root-17 disPaper-elevation1 disPaper-rounded">
         <img
           className="disCardMedia-root makeStyles-image-19 disCardMedia-media disCardMedia-img"

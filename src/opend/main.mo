@@ -114,14 +114,14 @@ actor OpenD {
             case (?result) result
         }; 
 
-        let transferResult = await purchasedNFT.transerOwnership(newOwnerId, true);
+        let transferResult = await purchasedNFT.transferOwnership(newOwnerId, true);
         if (transferResult == "Success") {
             mapOfListings.delete(id);
             var ownedNFTs : List.List<Principal> = switch (mapOfOwners.get(ownerId)) {
                 case null List.nil<Principal>();
                 case (?result) result;
             };
-            ownedNFTs := List.filter(getOwnedNFTs, func (listItemId: Principal) : Bool {
+            ownedNFTs := List.filter(ownedNFTs, func (listItemId: Principal) : Bool {
                 return listItemId != id;
             });
 
